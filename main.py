@@ -8,6 +8,8 @@ canvas.title('Music Player')
 canvas.geometry('400x600')
 canvas.config(bg='black')
 
+song_count = 0
+
 rootpath = "/Users/sam/Desktop/Music"
 pattern = '*.mp3'
 
@@ -54,12 +56,13 @@ def pause():
         pauseButton['text'] = 'Resume' # Change next incident of button to Resume    
     else: 
         mixer.music.unpause()
-        pauseButton['text'] = 'Pause'
+        pauseButton['text'] = 'Pause'           
+ 
 
-listbox = tk.Listbox(canvas, fg = 'green', bg = "cyan", width= 400, font = ('ds-digital',14))
+listbox = tk.Listbox(canvas, fg = 'green', bg = "cyan", width= 400, font = ('ds-digital', 14))
 listbox.pack(padx = 15, pady = 15)
 
-label = tk.Label(canvas, text = '', bg = 'black', fg = 'blue', font = ('ds-digital',40))
+label = tk.Label(canvas, text = '', bg = 'black', fg = 'blue', font = ('ds-digital', 40))
 label.pack(pady = 15)
 
 align = tk.Frame(canvas, bg = 'black')
@@ -84,5 +87,40 @@ nextButton.pack(pady = 10, in_ = align , side = 'left')
 for root,dirs, files in os.walk(rootpath):
     for filename in fnmatch.filter(files,pattern):
         listbox.insert('end',filename) 
+        song_count += 1 # Get current song list size
 
+
+if not (mixer.music.get_busy()): # If music not playing
+    # Should wait until files are loaded for this
+    
+        cur_song_name = listbox.get('anchor') # Get currently playing song
+        cur_song_index = listbox.get('anchor').index(cur_song_name) # Find the index of current song playing
+
+        if (cur_song_index == song_count): # We are on the last song
+
+            first_song_name = listbox.get('anchor')
+            first_song_index = 0
+
+            label.config(text = first_song_name)
+
+            listbox.select_clear('active')
+            listbox.activate(first_song_index)
+            listbox.select_set(first_song_index)
+
+            mixer.music.load(rootpath + "/" + listbox.get(first_song_name))
+            mixer.music.play()        
+        else: 
+            next_song_index = cur_song_index + 1
+            next_song_name = listbox.get(next_song_index)
+
+            label.config(text = next_song_name)
+
+            listbox.select_clear('active')
+            listbox.activate(next_song)
+            listbox.select_set(next_song_name)
+
+            mixer.music.load(rootpath + "/" + listbox.get(next_song_name))
+            mixer.music.play() 
+
+            
 canvas.mainloop()
