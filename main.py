@@ -1,7 +1,9 @@
 import tkinter as tk
 import fnmatch 
 import os
+import pygame
 from pygame import mixer
+
 
 canvas = tk.Tk()
 canvas.title('Music Player')
@@ -9,17 +11,44 @@ canvas.geometry('400x600')
 canvas.config(bg='black')
 
 song_count = 0
+loaded = False
+
+pygame.init()
+
+MUSIC_ENDED = pygame.USEREVENT 
+
+
 
 rootpath = "/Users/sam/Desktop/Music"
 pattern = '*.mp3'
 
 mixer.init()
 
-def select(): 
-    label.config(text = listbox.get('anchor'))
-    mixer.music.load(rootpath + "/" + listbox.get('anchor'))
-    mixer.music.play()
+# Play next song how?
 
+def select(): 
+    cur_song = listbox.curselection()
+    
+    if cur_song[0] + 1 < song_count: # Not at the last song
+        next_song = cur_song[0] + 1 
+        label.config(text = listbox.get('anchor'))
+        mixer.music.load(rootpath + "/" + listbox.get('anchor'))
+        mixer.music.play()
+        mixer.music.queue(rootpath + "/" + listbox.get(next_song))
+
+    else:  
+        next_song = 0
+        label.config(text = listbox.get(0))
+        mixer.music.load(rootpath + "/" + listbox.get('anchor'))
+        mixer.music.play()
+        mixer.music.queue(rootpath + "/" + listbox.get(0))
+    
+    
+    
+
+    loaded = True # Init
+
+ 
 def stop():
     mixer.music.stop()
     listbox.select_clear('active')
@@ -57,7 +86,13 @@ def pause():
     else: 
         mixer.music.unpause()
         pauseButton['text'] = 'Pause'           
+
  
+
+
+    
+
+
 
 listbox = tk.Listbox(canvas, fg = 'green', bg = "cyan", width= 400, font = ('ds-digital', 14))
 listbox.pack(padx = 15, pady = 15)
@@ -86,41 +121,10 @@ nextButton.pack(pady = 10, in_ = align , side = 'left')
 
 for root,dirs, files in os.walk(rootpath):
     for filename in fnmatch.filter(files,pattern):
-        listbox.insert('end',filename) 
+        listbox.insert(0,filename) 
         song_count += 1 # Get current song list size
 
 
-if not (mixer.music.get_busy()): # If music not playing
-    # Should wait until files are loaded for this
-    
-        cur_song_name = listbox.get('anchor') # Get currently playing song
-        cur_song_index = listbox.get('anchor').index(cur_song_name) # Find the index of current song playing
 
-        if (cur_song_index == song_count): # We are on the last song
 
-            first_song_name = listbox.get('anchor')
-            first_song_index = 0
-
-            label.config(text = first_song_name)
-
-            listbox.select_clear('active')
-            listbox.activate(first_song_index)
-            listbox.select_set(first_song_index)
-
-            mixer.music.load(rootpath + "/" + listbox.get(first_song_name))
-            mixer.music.play()        
-        else: 
-            next_song_index = cur_song_index + 1
-            next_song_name = listbox.get(next_song_index)
-
-            label.config(text = next_song_name)
-
-            listbox.select_clear('active')
-            listbox.activate(next_song)
-            listbox.select_set(next_song_name)
-
-            mixer.music.load(rootpath + "/" + listbox.get(next_song_name))
-            mixer.music.play() 
-
-            
 canvas.mainloop()
