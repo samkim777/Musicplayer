@@ -15,7 +15,6 @@ loaded = False
 
 pygame.init()
 
-MUSIC_ENDED = pygame.USEREVENT 
 
 
 
@@ -24,10 +23,12 @@ pattern = '*.mp3'
 
 mixer.init()
 
-# Play next song how?
 
 def select(): 
+    global loaded
+    loaded = True
     cur_song = listbox.curselection()
+    print('Running')
     
     if cur_song[0] + 1 < song_count: # Not at the last song
         next_song = cur_song[0] + 1 
@@ -37,7 +38,7 @@ def select():
         mixer.music.queue(rootpath + "/" + listbox.get(next_song))
 
     else:  
-        next_song = 0
+        next_song = 0 # At the last song
         label.config(text = listbox.get(0))
         mixer.music.load(rootpath + "/" + listbox.get('anchor'))
         mixer.music.play()
@@ -46,7 +47,7 @@ def select():
     
     
 
-    loaded = True # Init
+    
 
  
 def stop():
@@ -88,9 +89,11 @@ def pause():
         pauseButton['text'] = 'Pause'           
 
  
-
-
-    
+def loop():    
+    if not mixer.music.get_busy() and loaded: # Song not playing
+        print('Song')
+        select()       
+    canvas.after(3000,loop) 
 
 
 
@@ -125,6 +128,5 @@ for root,dirs, files in os.walk(rootpath):
         song_count += 1 # Get current song list size
 
 
-
-
+canvas.after(1000,loop())
 canvas.mainloop()
