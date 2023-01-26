@@ -32,15 +32,15 @@ def select():
     
     if cur_song[0] + 1 < song_count: # Not at the last song
         next_song = cur_song[0] + 1 
-        label.config(text = listbox.get('anchor'))
-        mixer.music.load(rootpath + "/" + listbox.get('anchor'))
+        label.config(text = listbox.get(cur_song))
+        mixer.music.load(rootpath + "/" + listbox.get(cur_song))
         mixer.music.play()
         mixer.music.queue(rootpath + "/" + listbox.get(next_song))
 
     else:  
         next_song = 0 # At the last song
-        label.config(text = listbox.get(0))
-        mixer.music.load(rootpath + "/" + listbox.get('anchor'))
+        label.config(text = listbox.get('anchor'))
+        mixer.music.load(rootpath + "/" + listbox.get(cur_song))
         mixer.music.play()
         mixer.music.queue(rootpath + "/" + listbox.get(0))
     
