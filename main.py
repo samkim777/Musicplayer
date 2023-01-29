@@ -25,31 +25,14 @@ mixer.init()
 
 
 def select(): 
+    song = listbox.curselection()
+    song_name = listbox.get(song[0])
+    label.config(text = listbox.get(song))
+    mixer.music.load(rootpath + '/' + song_name)
+    mixer.music.play()
     global loaded
     loaded = True
-    cur_song = listbox.curselection()
-    print('Running')
-    
-    if cur_song[0] + 1 < song_count: # Not at the last song
-        next_song = cur_song[0] + 1 
-        label.config(text = listbox.get(cur_song))
-        mixer.music.load(rootpath + "/" + listbox.get(cur_song))
-        mixer.music.play()
-        mixer.music.queue(rootpath + "/" + listbox.get(next_song))
 
-    else:  
-        next_song = 0 # At the last song
-        label.config(text = listbox.get('anchor'))
-        mixer.music.load(rootpath + "/" + listbox.get(cur_song))
-        mixer.music.play()
-        mixer.music.queue(rootpath + "/" + listbox.get(0))
-    
-    
-    
-
-    
-
- 
 def stop():
     mixer.music.stop()
     listbox.select_clear('active')
@@ -60,7 +43,7 @@ def next():
     next_song_name = listbox.get(next_song)
     label.config(text = next_song_name)
     
-    listbox.select_clear('active')
+    listbox.select_clear(0,'end')
     listbox.activate(next_song)
     listbox.select_set(next_song)
 
@@ -91,8 +74,29 @@ def pause():
  
 def loop():    
     if not mixer.music.get_busy() and loaded: # Song not playing
-        print('Song')
-        select()       
+       cur_song = listbox.curselection()
+
+       # Not at the last song
+       if cur_song[0] + 1 <= song_count: 
+        next_song = cur_song[0] + 1 
+        label.config(text = listbox.get(next_song))
+        mixer.music.load(rootpath + "/" + listbox.get(next_song))
+        mixer.music.play()
+
+        listbox.select_clear(0,'end')
+        listbox.activate(next_song)
+        listbox.select_set(next_song)
+
+        # At the last song 
+        if cur_song[0] + 1 > song_count:  
+         next_song = 0 
+         label.config(text = listbox.get(next_song))
+         mixer.music.load(rootpath + "/" + listbox.get(next_song))
+         mixer.music.play()
+         listbox.select_clear(0,'end')
+         listbox.activate(next_song)
+         listbox.select_set(next_song)
+
     canvas.after(3000,loop) 
 
 
