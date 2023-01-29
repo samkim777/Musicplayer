@@ -7,7 +7,7 @@ from pygame import mixer
 
 canvas = tk.Tk()
 canvas.title('Music Player')
-canvas.geometry('400x600')
+canvas.geometry('800x600')
 canvas.config(bg='black')
 
 song_count = 0
@@ -24,6 +24,8 @@ pattern = '*.mp3'
 mixer.init()
 
 
+
+
 def select(): 
     song = listbox.curselection()
     song_name = listbox.get(song[0])
@@ -32,9 +34,11 @@ def select():
     mixer.music.play()
     global loaded
     loaded = True
+    print(song[0])
 
 def stop():
     mixer.music.stop()
+    label.config(text = '')
     listbox.select_clear('active')
 
 def next():
@@ -77,7 +81,7 @@ def loop():
        cur_song = listbox.curselection()
 
        # Not at the last song
-       if cur_song[0] + 1 <= song_count: 
+       if cur_song[0] + 1 <= song_count - 1: 
         next_song = cur_song[0] + 1 
         label.config(text = listbox.get(next_song))
         mixer.music.load(rootpath + "/" + listbox.get(next_song))
@@ -87,24 +91,26 @@ def loop():
         listbox.activate(next_song)
         listbox.select_set(next_song)
 
-        # At the last song 
-        if cur_song[0] + 1 > song_count:  
-         next_song = 0 
-         label.config(text = listbox.get(next_song))
-         mixer.music.load(rootpath + "/" + listbox.get(next_song))
-         mixer.music.play()
-         listbox.select_clear(0,'end')
-         listbox.activate(next_song)
-         listbox.select_set(next_song)
+       # At the last song 
+       if cur_song[0] + 1 > song_count - 1:  
+        next_song = 0 
+        label.config(text = listbox.get(next_song))
+        mixer.music.load(rootpath + "/" + listbox.get(next_song))
+        mixer.music.play()
+        listbox.select_clear(0,'end')
+        listbox.activate(next_song)
+        listbox.select_set(next_song)
+
+       
 
     canvas.after(3000,loop) 
 
 
 
-listbox = tk.Listbox(canvas, fg = 'green', bg = "cyan", width= 400, font = ('ds-digital', 14))
+listbox = tk.Listbox(canvas, fg = 'green', bg = "cyan", width= 400, font = ('poppins', 14))
 listbox.pack(padx = 15, pady = 15)
 
-label = tk.Label(canvas, text = '', bg = 'black', fg = 'blue', font = ('ds-digital', 40))
+label = tk.Label(canvas, text = '', bg = 'black', fg = 'white', font = ('poppins', 30))
 label.pack(pady = 15)
 
 align = tk.Frame(canvas, bg = 'black')
