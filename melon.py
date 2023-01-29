@@ -22,7 +22,6 @@ for song_name in songs.items():
     data = json.loads(results)
     for i in data['videos']: # From JSON, look at the url suffix
         # Add song url to song_list
-        # Lawd forgive me for this O(n^2) 
         song_list_url.append('https://youtube.com' + i['url_suffix']) 
 
 
