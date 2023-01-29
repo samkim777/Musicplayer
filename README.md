@@ -20,4 +20,4 @@ pip install melonapi
 
 ##### If you want to download K-pop songs, then also change destinations inside melon.py for variables *rootpath* and *mp4path*. *mp4path* is for raw mp4 files, and *rootpath* will be for converted mp3 files
 
-###### Run main.py, and enjoy your music!
+##### Run main.py, and enjoy your music!
