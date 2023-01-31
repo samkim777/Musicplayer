@@ -7,11 +7,12 @@ from pygame import mixer
 
 canvas = tk.Tk()
 canvas.title('Music Player')
-canvas.geometry('800x600')
+canvas.geometry('800x900')
 canvas.config(bg='black')
 
 song_count = 0
 loaded = False
+paused = False
 
 pygame.init()
 
@@ -69,15 +70,17 @@ def previous():
 
 def pause():
     if  pauseButton['text'] == 'Pause':
+        paused = True
         mixer.music.pause()
         pauseButton['text'] = 'Resume' # Change next incident of button to Resume    
     else: 
         mixer.music.unpause()
+        paused = False
         pauseButton['text'] = 'Pause'           
 
  
 def loop():    
-    if not mixer.music.get_busy() and loaded: # Song not playing
+    if not mixer.music.get_busy() and loaded and paused == True: # Song not playing
        cur_song = listbox.curselection()
 
        # Not at the last song
@@ -111,10 +114,10 @@ listbox = tk.Listbox(canvas, fg = 'green', bg = "cyan", width= 400, font = ('pop
 listbox.pack(padx = 15, pady = 15)
 
 label = tk.Label(canvas, text = '', bg = 'black', fg = 'white', font = ('poppins', 30))
-label.pack(pady = 15)
+label.pack(pady = 30)
 
 align = tk.Frame(canvas, bg = 'black')
-align.pack(padx = 10, pady =10, anchor = 'center')
+align.pack(padx = 10, pady = 50, anchor = 'center')
 
 prevButton = tk.Button(canvas, text = 'Prev', command = previous)
 prevButton.pack(pady = 10, in_ = align , side = 'left')
