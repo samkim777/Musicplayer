@@ -35,7 +35,9 @@ def select():
     mixer.music.play()
     global loaded
     loaded = True
-    print(song[0])
+    if  pauseButton['text'] == 'Resume':
+        pauseButton['text'] = 'Pause'
+    
 
 def stop():
     mixer.music.stop()
@@ -69,6 +71,7 @@ def previous():
     mixer.music.play()    
 
 def pause():
+    global paused
     if  pauseButton['text'] == 'Pause':
         paused = True
         mixer.music.pause()
@@ -80,7 +83,7 @@ def pause():
 
  
 def loop():    
-    if not mixer.music.get_busy() and loaded and paused == True: # Song not playing
+    if not mixer.music.get_busy() and loaded and paused == False: # Song not playing
        cur_song = listbox.curselection()
 
        # Not at the last song
