@@ -14,6 +14,7 @@ song_count = 0
 loaded = False
 paused = False
 
+
 pygame.init()
 
 
@@ -72,6 +73,7 @@ def previous():
 
 def pause():
     global paused
+    
     if  pauseButton['text'] == 'Pause':
         paused = True
         mixer.music.pause()
@@ -82,7 +84,8 @@ def pause():
         pauseButton['text'] = 'Pause'           
 
  
-def loop():    
+def loop():  
+    global paused 
     if not mixer.music.get_busy() and loaded and paused == False: # Song not playing
        cur_song = listbox.curselection()
 
