@@ -7,7 +7,7 @@ from youtube_search import YoutubeSearch
 from melonapi import scrapeMelon
 
 song_list = []
-song_list_url = [] 
+song_list_url = []
 rootpath = "/Users/sam/Desktop/Music"
 mp4path = "/Users/sam/Desktop/MusicMp4"
 
@@ -22,6 +22,7 @@ for song_name in songs.items():
     data = json.loads(results)
     for i in data['videos']: # From JSON, look at the url suffix
         # Add song url to song_list
+        # Lawd forgive me for this O(n^2) 
         song_list_url.append('https://youtube.com' + i['url_suffix']) 
 
 
@@ -38,7 +39,7 @@ for url in song_list_url:
         audio_file = audio_stream.default_filename
         # Turn mp4 into mp3 for compatibility
         subprocess.call(['ffmpeg', '-i', mp4path +'/' + audio_file, "-vn", "-acodec", "mp3", "-ar",
-        "44100", "-ss", "0", "-b:a", "320k" ,rootpath + '/' + audio_file])
+        "44100", "-ss", "0", "-b:a", "320k" ,rootpath + '/' + audio_file + '.mp3'])
     else:
         print("No audio stream available in mp4 format")
 
