@@ -9,7 +9,8 @@ from melonapi import scrapeMelon
 song_list = []
 song_list_url = [] 
 rootpath = "/Users/sam/Desktop/Music"
-mp4path = "/Users/sam/Desktop/MusicMp4"
+mp4path = "/Users/sam/Desktop/MusicMp4" 
+
 
 # Grab JSON of currently top 100 trending songs from melon
 songs = json.loads(scrapeMelon.getList("LIVE").decode())
